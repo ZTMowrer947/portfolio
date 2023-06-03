@@ -14,8 +14,8 @@ const LocalNavLink = forwardRef<HTMLAnchorElement, PropTypes>(
     const pathname = usePathname();
     const isActive = pathname.startsWith(href.toString());
     const activeClass = isActive
-      ? 'text-white'
-      : 'text-gray-400 hover:text-white';
+      ? 'text-slate-800 dark:text-white'
+      : 'hover:text-slate-800 text-gray-400 dark:hover:text-white';
     const finalClassName = `${className ?? ''} ${activeClass}`;
 
     return (

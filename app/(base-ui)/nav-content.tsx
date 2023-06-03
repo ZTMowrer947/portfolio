@@ -15,7 +15,7 @@ export default function NavContent() {
         href="https://github.com/ZTMowrer947"
         rel="noreferrer noopener"
         target="_blank"
-        className="text-gray-400 hover:text-white md:mx-3"
+        className="hover:text-slate-800 text-gray-400 dark:hover:text-white md:mx-3"
       >
         GitHub
       </a>

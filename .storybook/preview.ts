@@ -5,6 +5,9 @@ import { withThemeByDataAttribute } from '@storybook/addon-styling';
 
 const preview: Preview = {
   parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
