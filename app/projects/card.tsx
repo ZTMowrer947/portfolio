@@ -21,14 +21,14 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             href={project.sourceLink}
             target="_blank"
             rel="noreferrer noopener"
-          />
+          >
+            Source Code
+          </a>
         )}
         {project.liveLink && (
-          <a
-            href={project.liveLink}
-            target="_blank"
-            rel="noreferrer noopener"
-          />
+          <a href={project.liveLink} target="_blank" rel="noreferrer noopener">
+            Live Demo
+          </a>
         )}
       </div>
     </article>
