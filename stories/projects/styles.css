@@ -1,0 +1,8 @@
+.sb-show-main {
+  @apply bg-indigo-50 text-black;
+}
+
+[data-mode="dark"] .sb-show-main {
+  @apply bg-indigo-900 text-white;
+}
+
