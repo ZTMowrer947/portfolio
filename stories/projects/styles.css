@@ -1,5 +1,5 @@
 .sb-show-main {
-  @apply bg-indigo-50 text-black;
+  @apply bg-white text-indigo-900;
 }
 
 [data-mode="dark"] .sb-show-main {

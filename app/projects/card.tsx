@@ -13,17 +13,20 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   const hasSourceLink = !!project.sourceLink;
   const hasLiveLink = !!project.liveLink;
 
-  let btnClasses = 'text-center my-2 text-gray-400 hover:text-white ';
+  let btnClasses =
+    'text-center my-2 text-indigo-700 dark:text-gray-400 hover:text-indigo-900 dark:hover:text-white ';
 
-  if (hasLiveLink && hasSourceLink) btnClasses += 'col-span-2 border-x';
-  else if (hasLiveLink || hasSourceLink) btnClasses += 'col-span-3 border-x';
+  if (hasLiveLink && hasSourceLink)
+    btnClasses += 'col-span-2 border-x border-indigo-900 dark:border-white';
+  else if (hasLiveLink || hasSourceLink)
+    btnClasses += 'col-span-3 border-x border-indigo-900 dark:border-white';
   else btnClasses += 'col-span-4 col-start-2';
 
   return (
-    <article className="m-2 border-2 rounded flex flex-col align-center">
+    <article className="m-2 border-2 border-indigo-900 dark:border-white rounded flex flex-col align-center uppercase">
       <ProjectImg image={firstImage} />
       <h1 className="text-center text-lg font-bold">{project.title}</h1>
-      <div className="grid grid-cols-6 border-t">
+      <div className="grid grid-cols-6 border-t border-indigo-900 dark:border-white">
         <Link href={`/projects/${project.id}`} className={btnClasses}>
           Details
         </Link>
