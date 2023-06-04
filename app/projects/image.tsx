@@ -1,9 +1,12 @@
 import { forwardRef } from 'react';
 
-import { ProjectImage } from '@/app/projects/type';
+import { ResponsiveImageData } from '@/app/projects/type';
 
-interface ProjectImgProps {
-  image: ProjectImage;
+interface ProjectImageProps {
+  /**
+   * The responsive data for the image to display.
+   */
+  image: ResponsiveImageData;
 }
 
 const mediaConditions = {
@@ -12,8 +15,8 @@ const mediaConditions = {
   medium: 'min-width: 768px',
 };
 
-const ProjectImg = forwardRef<HTMLImageElement, ProjectImgProps>(
-  function ProjectImg({ image }, ref) {
+const ProjectImage = forwardRef<HTMLImageElement, ProjectImageProps>(
+  function ProjectImage({ image }, ref) {
     const imgFragments = [
       image.xlargeImg,
       image.largeImg,
@@ -46,4 +49,4 @@ const ProjectImg = forwardRef<HTMLImageElement, ProjectImgProps>(
   }
 );
 
-export default ProjectImg;
+export default ProjectImage;

@@ -1,9 +1,9 @@
 import Chance from 'chance';
 
 import ProjectCard from '@/app/projects/card';
-import { Project, ProjectImage } from '@/app/projects/type';
+import { Project, ResponsiveImageData } from '@/app/projects/type';
 
-function generateProjectImage(chance: Chance.Chance): ProjectImage {
+function generateProjectImage(chance: Chance.Chance): ResponsiveImageData {
   return {
     id: chance.guid(),
     altText: chance.sentence(),

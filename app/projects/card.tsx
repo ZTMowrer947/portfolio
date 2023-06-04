@@ -1,9 +1,12 @@
 import Link from 'next/link';
 
-import ProjectImg from '@/app/projects/image';
+import ProjectImage from '@/app/projects/image';
 import { Project } from '@/app/projects/type';
 
 export interface ProjectCardProps {
+  /**
+   * The project to display on the card.
+   */
   project: Project;
 }
 
@@ -24,7 +27,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <article className="m-2 border-2 border-indigo-900 dark:border-white rounded flex flex-col align-center uppercase">
-      <ProjectImg image={firstImage} />
+      <ProjectImage image={firstImage} />
       <h1 className="text-center text-lg font-bold">{project.title}</h1>
       <div className="grid grid-cols-6 border-t border-indigo-900 dark:border-white">
         <Link href={`/projects/${project.id}`} className={btnClasses}>
