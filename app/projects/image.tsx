@@ -1,5 +1,6 @@
-import { ProjectImage } from '@/app/projects/type';
 import { forwardRef } from 'react';
+
+import { ProjectImage } from '@/app/projects/type';
 
 interface ProjectImgProps {
   image: ProjectImage;

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { Project } from '@/app/projects/type';
 import ProjectImg from '@/app/projects/image';
+import { Project } from '@/app/projects/type';
 
 export interface ProjectCardProps {
   project: Project;

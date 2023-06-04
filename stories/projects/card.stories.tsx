@@ -1,10 +1,10 @@
-import Chance from 'chance';
+import './styles.css';
+
 import type { Meta, StoryObj } from '@storybook/react';
+import Chance from 'chance';
 
 import ProjectCard from '@/app/projects/card';
 import type { Project } from '@/app/projects/type';
-
-import './styles.css';
 
 // If you get the seed string's reference, you are cultured!
 // In all seriousness, provides a static seed to ensure repeatable results

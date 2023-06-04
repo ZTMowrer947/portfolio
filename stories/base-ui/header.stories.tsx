@@ -1,8 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import HeaderComponent from '@/app/(base-ui)/header';
-
 import '../projects/styles.css';
 import './header.css';
+
+import type { Meta, StoryObj } from '@storybook/react';
+
+import HeaderComponent from '@/app/(base-ui)/header';
 
 const meta: Meta<typeof HeaderComponent> = {
   title: 'Base UI/Header',

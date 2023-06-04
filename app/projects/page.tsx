@@ -1,7 +1,7 @@
 import Chance from 'chance';
 
-import { Project, ProjectImage } from '@/app/projects/type';
 import ProjectCard from '@/app/projects/card';
+import { Project, ProjectImage } from '@/app/projects/type';
 
 function generateProjectImage(chance: Chance.Chance): ProjectImage {
   return {

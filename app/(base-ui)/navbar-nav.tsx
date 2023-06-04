@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import CollapsibleNav from '@/app/(base-ui)/collapsible-nav';
 
 export default function NavbarNav() {
