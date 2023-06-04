@@ -137,11 +137,11 @@ export function generateProjectList(
       }
     );
 
-    return [
+    return chance.shuffle([
       ...standardProjects,
       ...projectsWithSourceLink,
       ...projectsWithLiveLink,
       ...projectsWithBothLinks,
-    ];
+    ]);
   }
 }
