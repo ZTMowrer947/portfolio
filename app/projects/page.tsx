@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import ProjectCard from '@/app/projects/card';
+import ProjectList from '@/app/projects/list';
 import { Project, ResponsiveImageData } from '@/app/projects/type';
 
 function generateProjectImage(chance: Chance.Chance): ResponsiveImageData {
@@ -42,13 +42,5 @@ export default function Projects() {
   const chance = new Chance();
   const projects = chance.n(generateProject, 10, chance);
 
-  const cards = projects.map((project) => (
-    <ProjectCard project={project} key={project.id} />
-  ));
-
-  return (
-    <main className="p-12 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
-      {cards}
-    </main>
-  );
+  return <ProjectList projects={projects} />;
 }
