@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import LocalNavLink from '@/app/(base-ui)/local-nav-link';
-import NavContainer from '@/app/(base-ui)/nav-container';
+import NavbarNav from '@/app/(base-ui)/navbar-nav';
 
 export default function Header() {
   return (
@@ -13,7 +12,7 @@ export default function Header() {
           Zack Mowrer
         </Link>
 
-        <NavContainer />
+        <NavbarNav />
       </nav>
     </header>
   );

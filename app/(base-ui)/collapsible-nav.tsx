@@ -1,6 +1,6 @@
 import LocalNavLink from '@/app/(base-ui)/local-nav-link';
 
-export default function NavContent() {
+export default function CollapsibleNav() {
   return (
     <>
       <LocalNavLink href="/projects" className="md:mx-3">

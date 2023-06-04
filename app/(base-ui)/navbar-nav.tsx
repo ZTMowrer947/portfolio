@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import NavContent from '@/app/(base-ui)/nav-content';
+import CollapsibleNav from '@/app/(base-ui)/collapsible-nav';
 
-export default function NavContainer() {
+export default function NavbarNav() {
   const [isCollapsed, setCollapsed] = useState(true);
 
   const handleToggle = () => setCollapsed((prevCollapsed) => !prevCollapsed);
@@ -22,7 +22,7 @@ export default function NavContainer() {
           isCollapsed ? 'hidden md:block' : ''
         }`}
       >
-        <NavContent />
+        <CollapsibleNav />
       </div>
     </>
   );
