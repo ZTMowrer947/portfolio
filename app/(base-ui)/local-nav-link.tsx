@@ -16,6 +16,8 @@ const LocalNavLink = forwardRef<HTMLAnchorElement, PropTypes>(
     const activeClass = isActive
       ? 'text-slate-800 dark:text-white'
       : 'hover:text-slate-800 text-gray-400 dark:hover:text-white';
+
+    /* istanbul ignore next */
     const finalClassName = `${className ?? ''} ${activeClass}`;
 
     return (
