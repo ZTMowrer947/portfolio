@@ -15,6 +15,7 @@ export default function NavbarNav() {
       <button
         onClick={handleToggle}
         className="md:hidden self-start rounded border-2 p-2"
+        aria-label="Toggle"
       >
         Toggle
       </button>
@@ -22,6 +23,7 @@ export default function NavbarNav() {
         className={`flex flex-1 flex-col items-start md:items-center md:flex-row justify-start ${
           isCollapsed ? 'hidden md:block' : ''
         }`}
+        data-testid="nav-collapse"
       >
         <CollapsibleNav />
       </div>
