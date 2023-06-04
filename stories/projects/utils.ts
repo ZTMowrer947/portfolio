@@ -46,18 +46,22 @@ function generateProjectImage(chance: Chance.Chance): ResponsiveImageData {
     smallImg: {
       src: 'https://placehold.it/640x360',
       width: 640,
+      height: 360,
     },
     medImg: {
       src: 'https://placehold.it/800x450',
       width: 800,
+      height: 450,
     },
     largeImg: {
       src: 'https://placehold.it/1024x576',
       width: 1024,
+      height: 576,
     },
     xlargeImg: {
       src: 'https://placehold.it/1280x720',
       width: 1280,
+      height: 720,
     },
   };
 }

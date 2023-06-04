@@ -11,6 +11,11 @@ interface ImageData {
    * The width of the image in pixels.
    */
   width: number;
+
+  /**
+   * The height of the image in pixels.
+   */
+  height: number;
 }
 
 export interface ResponsiveImageData {
