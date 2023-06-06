@@ -126,6 +126,10 @@ export async function getProjects(): Promise<Project[]> {
       headers: {
         Authorization: `Bearer ${previewToken}`,
       },
+      next: {
+        tags: ['projects'],
+      },
+      cache: process.env.NODE_ENV === 'production' ? 'default' : 'no-cache',
     }
   );
 
@@ -143,6 +147,10 @@ export async function getProject(id: string): Promise<Project> {
       headers: {
         Authorization: `Bearer ${previewToken}`,
       },
+      next: {
+        tags: [`project-${id}`],
+      },
+      cache: process.env.NODE_ENV === 'production' ? 'default' : 'no-cache',
     }
   );
 
