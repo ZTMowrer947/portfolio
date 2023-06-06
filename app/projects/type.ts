@@ -1,11 +1,21 @@
 /**
  * Represents data relating to an image.
  */
-interface ImageData {
+export interface ImageData {
+  /**
+   * The unique ID of the image.
+   */
+  id: string;
+
   /**
    * The URL of the image.
    */
   src: string;
+
+  /**
+   * The alt label text for if the image cannot be displayed.
+   */
+  altText: string;
 
   /**
    * The width of the image in pixels.
@@ -16,38 +26,6 @@ interface ImageData {
    * The height of the image in pixels.
    */
   height: number;
-}
-
-export interface ResponsiveImageData {
-  /**
-   * The unique ID of the image.
-   */
-  id: string;
-
-  /**
-   * The alt label text for if the image cannot be displayed.
-   */
-  altText: string;
-
-  /**
-   * The image data for use on small screens.
-   */
-  smallImg: ImageData;
-
-  /**
-   * The image data for use on medium screens.
-   */
-  medImg: ImageData;
-
-  /**
-   * The image data for use on large screens.
-   */
-  largeImg: ImageData;
-
-  /**
-   * The image data for use on extra-large screens.
-   */
-  xlargeImg: ImageData;
 }
 
 /**
@@ -85,7 +63,7 @@ export interface Project {
   liveLink?: string;
 
   /**
-   * An array of responsive images of the project in action.
+   * An array of image data objects.
    */
-  images: ResponsiveImageData[];
+  images: ImageData[];
 }

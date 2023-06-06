@@ -1,4 +1,4 @@
-import { Project, ResponsiveImageData } from '@/app/projects/type';
+import type { ImageData, Project } from '@/app/projects/type';
 
 // Environment variables
 const spaceId = process.env.CONTENTFUL_SPACEID!;
@@ -93,28 +93,19 @@ type CtProjectCollection = CtCollection<
 // API functions
 function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
   return ctCollection.items.map<Project>((ctProject) => {
-    const images = ctProject.fields.images.map<ResponsiveImageData>(
-      (imageLink) => {
-        const ctImage = ctCollection.includes.Asset.find(
-          (asset) => asset.sys.id === imageLink.sys.id
-        )!;
+    const images = ctProject.fields.images.map<ImageData>((imageLink) => {
+      const ctImage = ctCollection.includes.Asset.find(
+        (asset) => asset.sys.id === imageLink.sys.id
+      )!;
 
-        const imageData = {
-          src: ctImage.fields.file.url,
-          width: ctImage.fields.file.details.image.width,
-          height: ctImage.fields.file.details.image.height,
-        };
-
-        return {
-          id: ctImage.sys.id,
-          altText: 'idk just yet about that one chief', // TODO: Extract viable alt text for project images
-          smallImg: imageData,
-          medImg: imageData,
-          largeImg: imageData,
-          xlargeImg: imageData,
-        };
-      }
-    );
+      return {
+        id: ctImage.sys.id,
+        altText: 'idk just yet about that one chief', // TODO: Extract viable alt text for project images
+        src: ctImage.fields.file.url,
+        width: ctImage.fields.file.details.image.width,
+        height: ctImage.fields.file.details.image.height,
+      };
+    });
 
     return {
       id: ctProject.sys.id,

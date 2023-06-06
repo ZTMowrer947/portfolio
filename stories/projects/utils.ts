@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import { Project, ResponsiveImageData } from '@/app/projects/type';
+import type { ImageData, Project } from '@/app/projects/type';
 
 // Option types
 interface GenerateProjectOptions {
@@ -39,30 +39,13 @@ const generateProjectListDefaultOptions: GenerateProjectListOptions = {
 };
 
 // Utility functions
-function generateProjectImage(chance: Chance.Chance): ResponsiveImageData {
+function generateProjectImage(chance: Chance.Chance): ImageData {
   return {
     id: chance.guid(),
     altText: chance.string(),
-    smallImg: {
-      src: 'https://placehold.it/640x360',
-      width: 640,
-      height: 360,
-    },
-    medImg: {
-      src: 'https://placehold.it/800x450',
-      width: 800,
-      height: 450,
-    },
-    largeImg: {
-      src: 'https://placehold.it/1024x576',
-      width: 1024,
-      height: 576,
-    },
-    xlargeImg: {
-      src: 'https://placehold.it/1280x720',
-      width: 1280,
-      height: 720,
-    },
+    src: 'https://placehold.it/1280x720',
+    width: 1280,
+    height: 720,
   };
 }
 
