@@ -1,11 +1,8 @@
-import Chance from 'chance';
-
+import { getProjects } from '@/app/projects/api';
 import ProjectList from '@/app/projects/list';
-import { generateProjectList } from '@/stories/projects/utils';
 
-export default function Projects() {
-  const chance = new Chance();
-  const projects = generateProjectList(chance);
+export default async function Projects() {
+  const projects = await getProjects();
 
   return <ProjectList projects={projects} />;
 }

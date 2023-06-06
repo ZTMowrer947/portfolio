@@ -1,7 +1,5 @@
-import Chance from 'chance';
-
 import ProjectInfo from '@/app/projects/[id]/info';
-import { generateProject } from '@/stories/projects/utils';
+import { getProject } from '@/app/projects/api';
 
 interface ProjectDetailProps {
   params: {
@@ -9,9 +7,8 @@ interface ProjectDetailProps {
   };
 }
 
-export default function ProjectDetail({ params }: ProjectDetailProps) {
-  const chance = new Chance(params.id);
-  const project = generateProject(chance);
+export default async function ProjectDetail({ params }: ProjectDetailProps) {
+  const project = await getProject(params.id);
 
   return <ProjectInfo project={project} />;
 }
