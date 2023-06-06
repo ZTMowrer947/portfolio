@@ -101,7 +101,7 @@ function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
       return {
         id: ctImage.sys.id,
         altText: 'idk just yet about that one chief', // TODO: Extract viable alt text for project images
-        src: ctImage.fields.file.url,
+        src: `https:${ctImage.fields.file.url}`,
         width: ctImage.fields.file.details.image.width,
         height: ctImage.fields.file.details.image.height,
       };

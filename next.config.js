@@ -9,6 +9,17 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    loader: 'custom',
+    loaderFile: './imgLoader.js',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.ctfassets.net',
+        port: '',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

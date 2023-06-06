@@ -1,6 +1,6 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
-import ProjectImage from '@/app/projects/image';
 import { Project } from '@/app/projects/type';
 
 export interface ProjectCardProps {
@@ -25,9 +25,18 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     btnClasses += 'col-span-3 border-x border-indigo-900 dark:border-white';
   else btnClasses += 'col-span-4 col-start-2';
 
+  const sizes = '(min-width: 1536px) 33vw, (min-width: 768px) 50vw, 100vw';
+
   return (
     <article className="m-2 border-2 border-indigo-900 dark:border-white rounded flex flex-col align-center uppercase">
-      <ProjectImage image={firstImage} />
+      <div className="relative object-contain aspect-video">
+        <Image
+          src={firstImage.src}
+          alt={'Thumbnail for project'}
+          fill
+          sizes={sizes}
+        />
+      </div>
       <h1 className="text-center text-lg font-bold">{project.title}</h1>
       <div className="grid grid-cols-6 border-t border-indigo-900 dark:border-white">
         <Link href={`/projects/${project.id}`} className={btnClasses}>
