@@ -1,7 +1,8 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 
-import ProjectImage from '@/app/projects/image';
+import ProjectImageGallery from '@/app/projects/[id]/image-gallery';
 import { Project } from '@/app/projects/type';
 
 interface ProjectInfoProps {
@@ -9,6 +10,10 @@ interface ProjectInfoProps {
 }
 
 export default function ProjectInfo({ project }: ProjectInfoProps) {
+  const imgSizes = `(min-width: 1280px) 75vw,
+  (min-width: 768px) 67vw,
+  100vw`;
+
   return (
     <main className="p-12">
       <header className="flex justify-start align-center mb-2">
@@ -45,8 +50,8 @@ export default function ProjectInfo({ project }: ProjectInfoProps) {
       </header>
 
       <article className="grid md:max-xl:grid-cols-3 grid-cols-4 grid-flow-row">
-        <section className="col-span-4 md:col-span-2 xl:col-span-3 md:me-2">
-          <ProjectImage image={project.images[0]} />
+        <section className="col-span-4 md:col-span-2 xl:col-span-3 md:me-2 relative aspect-video">
+          <ProjectImageGallery images={project.images} />
         </section>
         <aside className="order-last md:order-none text-center col-start-2 col-end-4 sm:col-span-1">
           <h3 className="text-xl">Tags</h3>
