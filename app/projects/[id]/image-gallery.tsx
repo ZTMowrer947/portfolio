@@ -19,7 +19,7 @@ export default function ProjectImageGallery({
       setActiveIdx((prevActive) =>
         prevActive === images.length - 1 ? 0 : prevActive + 1
       );
-    }, 3000);
+    }, 5000);
 
     return () => {
       window.clearInterval(timerId);
@@ -30,9 +30,9 @@ export default function ProjectImageGallery({
   (min-width: 768px) 67vw,
   100vw`;
 
-  return images.map((image, index) => {
+  const imageList = images.map((image, index) => {
     const priority = index === 0;
-    const className = index === activeIdx ? '' : 'hidden';
+    const hiddenClassName = index === activeIdx ? 'opacity-100' : 'opacity-0';
 
     return (
       <Image
@@ -42,8 +42,14 @@ export default function ProjectImageGallery({
         key={image.id}
         alt={image.altText}
         sizes={imgSizes}
-        className={className}
+        className={`${hiddenClassName} transition-opacity duration-500`}
       />
     );
   });
+
+  return (
+    <section className="col-span-4 md:col-span-2 xl:col-span-3 md:me-2 relative aspect-video">
+      {imageList}
+    </section>
+  );
 }

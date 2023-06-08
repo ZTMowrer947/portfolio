@@ -50,9 +50,7 @@ export default function ProjectInfo({ project }: ProjectInfoProps) {
       </header>
 
       <article className="grid md:max-xl:grid-cols-3 grid-cols-4 grid-flow-row">
-        <section className="col-span-4 md:col-span-2 xl:col-span-3 md:me-2 relative aspect-video">
-          <ProjectImageGallery images={project.images} />
-        </section>
+        <ProjectImageGallery images={project.images} />
         <aside className="order-last md:order-none text-center col-start-2 col-end-4 sm:col-span-1">
           <h3 className="text-xl">Tags</h3>
           <ul className="border-t">
