@@ -7,24 +7,30 @@ import type { ImageData } from '@/app/projects/type';
 
 interface ProjectImageGalleryProps {
   images: ImageData[];
+  presentMs?: number;
 }
 
 export default function ProjectImageGallery({
   images,
+  presentMs,
 }: ProjectImageGalleryProps) {
   const [activeIdx, setActiveIdx] = useState(0);
+
+  /* istanbul ignore next */
+  const timeoutDelay = presentMs ?? 5000;
 
   useEffect(() => {
     const timerId = window.setInterval(() => {
       setActiveIdx((prevActive) =>
         prevActive === images.length - 1 ? 0 : prevActive + 1
       );
-    }, 5000);
+    }, timeoutDelay);
 
+    /* istanbul ignore next */
     return () => {
       window.clearInterval(timerId);
     };
-  }, [images.length]);
+  }, [images.length, timeoutDelay]);
 
   const imgSizes = `(min-width: 1280px) 75vw,
   (min-width: 768px) 67vw,
