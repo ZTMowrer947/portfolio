@@ -40,10 +40,16 @@ const generateProjectListDefaultOptions: GenerateProjectListOptions = {
 
 // Utility functions
 function generateProjectImage(chance: Chance.Chance): ImageData {
+  const backgroundColor = chance.string({
+    pool: '01234567890ABCDEF',
+    length: 6,
+  });
+  const textColor = chance.string({ pool: '01234567890ABCDEF', length: 3 });
+
   return {
     id: chance.guid(),
     altText: chance.string(),
-    src: 'https://placehold.it/1280x720',
+    src: `https://placehold.it/1280x720/${backgroundColor}/${textColor}`,
     width: 1280,
     height: 720,
   };
