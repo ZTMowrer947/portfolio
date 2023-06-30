@@ -1,7 +1,16 @@
+import Chance from 'chance';
+
+import InfoDisplay, { PersonalInfo } from '@/app/about/info';
+
 export default function About() {
-  return (
-    <main className="flex flex-col items-center justify-between p-24">
-      <h1>So hey this is where some info about me goes</h1>
-    </main>
-  );
+  const chance = new Chance();
+
+  const info: PersonalInfo = {
+    name: chance.name(),
+    bio: chance.paragraph(),
+    profileImageUrl: 'https://placehold.co/500x500',
+    externalLinks: [],
+  };
+
+  return <InfoDisplay info={info} />;
 }
