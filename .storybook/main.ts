@@ -8,6 +8,7 @@ const config: StorybookConfig = {
     '@storybook/addon-interactions',
     '@storybook/addon-styling',
     '@storybook/addon-coverage',
+    '@storybook/addon-mdx-gfm',
   ],
   framework: {
     name: '@storybook/nextjs',
@@ -18,7 +19,6 @@ const config: StorybookConfig = {
   },
   async webpackFinal(config) {
     config.resolve.alias['@'] = resolve(__dirname, '..');
-
     return config;
   },
 };
