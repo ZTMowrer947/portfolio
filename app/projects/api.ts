@@ -119,7 +119,7 @@ function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
 
 export async function getProjects(): Promise<Project[]> {
   const res = await fetch(
-    `https://cdn.contentful.com/spaces/${spaceId}/entries?content_type=project`,
+    `https://cdn.contentful.com/spaces/${spaceId}/entries?content_type=project&order=sys.createdAt`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
