@@ -1,75 +1,14 @@
 import 'server-only';
 
 import { accessToken, apiBaseUrl } from '@/app/ctConfig';
+import type {
+  CtCollection,
+  CtEntry,
+  CtIdentifiableResource,
+  CtImageIncludes,
+  CtImageLink,
+} from '@/app/ctTypes';
 import type { ImageData, Project } from '@/app/projects/type';
-
-// API types
-interface CtResource<T extends string> {
-  sys: {
-    type: T;
-  };
-}
-
-interface CtIdentifiableResource<T extends string> extends CtResource<T> {
-  sys: CtResource<T>['sys'] & {
-    id: string;
-  };
-}
-
-interface CtLink<LinkT extends string> extends CtIdentifiableResource<'Link'> {
-  sys: CtIdentifiableResource<'Link'>['sys'] & {
-    linkType: LinkT;
-  };
-}
-
-type CtItem<Type extends string, Fields> = CtIdentifiableResource<Type> & {
-  fields: Fields;
-};
-
-type CtEntry<ContentType extends string, Fields> = CtItem<'Entry', Fields> & {
-  metadata: {
-    tags: CtLink<'Tag'>[];
-  };
-  sys: CtItem<'Entry', Fields> & {
-    contentType: CtLink<'ContentType'> & {
-      id: ContentType;
-    };
-  };
-};
-
-interface CtCollection<
-  ItemType extends string,
-  ItemFields,
-  Item extends CtEntry<ItemType, ItemFields>
-> extends CtResource<'Array'> {
-  skip: number;
-  limit: number;
-  total: number;
-  items: Item[];
-}
-
-// Portfolio-specific types
-type CtImageLink = CtLink<'Asset'>;
-
-type CtImage = CtItem<
-  'Asset',
-  {
-    file: {
-      url: string;
-      contentType: string;
-      details: {
-        image: {
-          width: number;
-          height: number;
-        };
-      };
-    };
-  }
->;
-
-interface CtImageIncludes {
-  Asset: CtImage[];
-}
 
 type CtProject = CtEntry<
   'project',
