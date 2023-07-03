@@ -2,8 +2,7 @@ import type { ImageData, Project } from '@/app/projects/type';
 
 // Environment variables
 const spaceId = process.env.CONTENTFUL_SPACEID!;
-const deliveryToken = process.env.CONTENTFUL_DELIVERY_TOKEN!;
-const previewToken = process.env.CONTENTFUL_PREVIEW_TOKEN!;
+const accessToken = process.env.CONTENTFUL_DELIVERY_TOKEN!;
 
 // API types
 interface CtResource<T extends string> {
@@ -75,7 +74,6 @@ type CtProject = CtEntry<
   {
     name: string;
     description: string;
-    tags: string[];
     images: CtImageLink[];
     sourceLink: string | null;
     liveLink: string | null;
@@ -111,7 +109,7 @@ function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
       id: ctProject.sys.id,
       title: ctProject.fields.name,
       description: ctProject.fields.description,
-      tags: ctProject.fields.tags,
+      tags: [],
       images,
       sourceLink: ctProject.fields.sourceLink ?? undefined,
       liveLink: ctProject.fields.liveLink ?? undefined,
@@ -121,10 +119,10 @@ function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
 
 export async function getProjects(): Promise<Project[]> {
   const res = await fetch(
-    `https://preview.contentful.com/spaces/${spaceId}/entries?content_type=project`,
+    `https://cdn.contentful.com/spaces/${spaceId}/entries?content_type=project`,
     {
       headers: {
-        Authorization: `Bearer ${previewToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       next: {
         tags: ['projects'],
@@ -142,10 +140,10 @@ export async function getProjects(): Promise<Project[]> {
 
 export async function getProject(id: string): Promise<Project> {
   const res = await fetch(
-    `https://preview.contentful.com/spaces/${spaceId}/entries?content_type=project&sys.id=${id}`,
+    `https://cdn.contentful.com/spaces/${spaceId}/entries?content_type=project&sys.id=${id}`,
     {
       headers: {
-        Authorization: `Bearer ${previewToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       next: {
         tags: [`project-${id}`],
