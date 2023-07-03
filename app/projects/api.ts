@@ -1,3 +1,5 @@
+import 'server-only';
+
 import type { ImageData, Project } from '@/app/projects/type';
 
 // Environment variables
