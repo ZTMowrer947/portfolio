@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 
+import { ImageData } from '@/app/projects/type';
+
 interface InfoLink {
   label: string;
   url: string;
@@ -9,7 +11,7 @@ interface InfoLink {
 export interface PersonalInfo {
   name: string;
   bio: string;
-  profileImageUrl: string;
+  profileImageUrl: ImageData;
   externalLinks: InfoLink[];
 }
 
@@ -26,11 +28,11 @@ export default function InfoDisplay({ info }: InfoDisplayProps) {
 
       <aside className="text-center">
         <Image
-          className="rounded-full"
-          src="https://placehold.co/500x500"
-          alt="Author Profile Picture"
-          width={500}
-          height={500}
+          className="rounded-md"
+          src={info.profileImageUrl.src}
+          alt={info.profileImageUrl.altText}
+          width={info.profileImageUrl.width}
+          height={info.profileImageUrl.height}
         />
         <h3 className="uppercase">{info.name}</h3>
       </aside>
