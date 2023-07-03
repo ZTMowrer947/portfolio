@@ -3,6 +3,7 @@ import type { ImageData, Project } from '@/app/projects/type';
 // Environment variables
 const spaceId = process.env.CONTENTFUL_SPACEID!;
 const accessToken = process.env.CONTENTFUL_DELIVERY_TOKEN!;
+const environment = process.env.CONTENTFUL_ENVIRONMENT!;
 
 // API types
 interface CtResource<T extends string> {
@@ -28,6 +29,9 @@ type CtItem<Type extends string, Fields> = CtIdentifiableResource<Type> & {
 };
 
 type CtEntry<ContentType extends string, Fields> = CtItem<'Entry', Fields> & {
+  metadata: {
+    tags: CtLink<'Tag'>[];
+  };
   sys: CtItem<'Entry', Fields> & {
     contentType: CtLink<'ContentType'> & {
       id: ContentType;
@@ -88,33 +92,62 @@ type CtProjectCollection = CtCollection<
   includes: CtImageIncludes;
 };
 
+type CtTag = CtIdentifiableResource<'Tag'> & {
+  name: string;
+};
+
 // API functions
-function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
-  return ctCollection.items.map<Project>((ctProject) => {
-    const images = ctProject.fields.images.map<ImageData>((imageLink) => {
-      const ctImage = ctCollection.includes.Asset.find(
-        (asset) => asset.sys.id === imageLink.sys.id
-      )!;
+async function getTagName(id: string): Promise<string> {
+  const res = await fetch(
+    `https://cdn.contentful.com/spaces/${spaceId}/environments/${environment}/tags/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      next: {
+        tags: [`tag-${id}`],
+      },
+      cache: process.env.NODE_ENV === 'production' ? 'default' : 'no-cache',
+    }
+  );
+
+  if (!res.ok) throw new Error('uh oh');
+
+  const data = (await res.json()) as CtTag;
+
+  return data.name;
+}
+
+async function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
+  return Promise.all(
+    ctCollection.items.map<Promise<Project>>(async (ctProject) => {
+      const images = ctProject.fields.images.map<ImageData>((imageLink) => {
+        const ctImage = ctCollection.includes.Asset.find(
+          (asset) => asset.sys.id === imageLink.sys.id
+        )!;
+
+        return {
+          id: ctImage.sys.id,
+          altText: 'idk just yet about that one chief', // TODO: Extract viable alt text for project images
+          src: `https:${ctImage.fields.file.url}`,
+          width: ctImage.fields.file.details.image.width,
+          height: ctImage.fields.file.details.image.height,
+        };
+      });
 
       return {
-        id: ctImage.sys.id,
-        altText: 'idk just yet about that one chief', // TODO: Extract viable alt text for project images
-        src: `https:${ctImage.fields.file.url}`,
-        width: ctImage.fields.file.details.image.width,
-        height: ctImage.fields.file.details.image.height,
+        id: ctProject.sys.id,
+        title: ctProject.fields.name,
+        description: ctProject.fields.description,
+        tags: await Promise.all(
+          ctProject.metadata.tags.map((tag) => getTagName(tag.sys.id))
+        ),
+        images,
+        sourceLink: ctProject.fields.sourceLink ?? undefined,
+        liveLink: ctProject.fields.liveLink ?? undefined,
       };
-    });
-
-    return {
-      id: ctProject.sys.id,
-      title: ctProject.fields.name,
-      description: ctProject.fields.description,
-      tags: [],
-      images,
-      sourceLink: ctProject.fields.sourceLink ?? undefined,
-      liveLink: ctProject.fields.liveLink ?? undefined,
-    };
-  });
+    })
+  );
 }
 
 export async function getProjects(): Promise<Project[]> {
@@ -135,7 +168,7 @@ export async function getProjects(): Promise<Project[]> {
 
   const data = (await res.json()) as CtProjectCollection;
 
-  return mapCtCollectionToProjectList(data);
+  return await mapCtCollectionToProjectList(data);
 }
 
 export async function getProject(id: string): Promise<Project> {
@@ -156,7 +189,7 @@ export async function getProject(id: string): Promise<Project> {
 
   const data = (await res.json()) as CtProjectCollection;
 
-  const projectResults = mapCtCollectionToProjectList(data);
+  const projectResults = await mapCtCollectionToProjectList(data);
 
   return projectResults[0];
 }
