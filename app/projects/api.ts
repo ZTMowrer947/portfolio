@@ -1,11 +1,7 @@
 import 'server-only';
 
+import { accessToken, apiBaseUrl } from '@/app/ctConfig';
 import type { ImageData, Project } from '@/app/projects/type';
-
-// Environment variables
-const spaceId = process.env.CONTENTFUL_SPACEID!;
-const accessToken = process.env.CONTENTFUL_DELIVERY_TOKEN!;
-const environment = process.env.CONTENTFUL_ENVIRONMENT!;
 
 // API types
 interface CtResource<T extends string> {
@@ -100,18 +96,15 @@ type CtTag = CtIdentifiableResource<'Tag'> & {
 
 // API functions
 async function getTagName(id: string): Promise<string> {
-  const res = await fetch(
-    `https://cdn.contentful.com/spaces/${spaceId}/environments/${environment}/tags/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      next: {
-        tags: [`tag-${id}`],
-      },
-      cache: process.env.NODE_ENV === 'production' ? 'default' : 'no-cache',
-    }
-  );
+  const res = await fetch(`${apiBaseUrl}/tags/${id}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    next: {
+      tags: [`tag-${id}`],
+    },
+    cache: process.env.NODE_ENV === 'production' ? 'default' : 'no-cache',
+  });
 
   if (!res.ok) throw new Error('uh oh');
 
@@ -154,7 +147,7 @@ async function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
 
 export async function getProjects(): Promise<Project[]> {
   const res = await fetch(
-    `https://cdn.contentful.com/spaces/${spaceId}/entries?content_type=project&order=sys.createdAt`,
+    `${apiBaseUrl}/entries?content_type=project&order=sys.createdAt`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -175,7 +168,7 @@ export async function getProjects(): Promise<Project[]> {
 
 export async function getProject(id: string): Promise<Project> {
   const res = await fetch(
-    `https://cdn.contentful.com/spaces/${spaceId}/entries?content_type=project&sys.id=${id}`,
+    `${apiBaseUrl}/entries?content_type=project&sys.id=${id}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
