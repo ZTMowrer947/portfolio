@@ -28,7 +28,13 @@ export const InformationDisplay: Story = {
     info: {
       name: chance.name(),
       bio: chance.paragraph(),
-      profileImageUrl: 'https://placehold.co/500x500',
+      profileImageUrl: {
+        src: 'https://placehold.co/500x500',
+        width: 500,
+        height: 500,
+        id: 'placeholder',
+        altText: 'placeholder portrait image',
+      },
       externalLinks: chance.n(generateLink, 3, chance),
     },
   },
