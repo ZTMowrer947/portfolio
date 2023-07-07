@@ -1,42 +1,13 @@
 import 'server-only';
 
+import type { CtProjectCollection, CtTag } from '@/app/(contentful)/entryTypes';
 import {
   accessToken,
   apiBaseUrl,
   apiDraftUrl,
   previewToken,
-} from '@/app/ctConfig';
-import type {
-  CtCollection,
-  CtEntry,
-  CtIdentifiableResource,
-  CtImageIncludes,
-  CtImageLink,
-} from '@/app/ctTypes';
+} from '@/app/(contentful)/env';
 import type { ImageData, Project } from '@/app/projects/type';
-
-type CtProject = CtEntry<
-  'project',
-  {
-    name: string;
-    description: string;
-    images: CtImageLink[];
-    sourceLink: string | null;
-    liveLink: string | null;
-  }
->;
-
-type CtProjectCollection = CtCollection<
-  'project',
-  CtProject['fields'],
-  CtProject
-> & {
-  includes: CtImageIncludes;
-};
-
-type CtTag = CtIdentifiableResource<'Tag'> & {
-  name: string;
-};
 
 // API functions
 function getApiParams(draftMode: boolean) {

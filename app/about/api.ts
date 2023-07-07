@@ -1,38 +1,8 @@
 import 'server-only';
 
+import type { CtAuthorCollection } from '@/app/(contentful)/entryTypes';
+import { accessToken, apiBaseUrl } from '@/app/(contentful)/env';
 import { PersonalInfo } from '@/app/about/info';
-import { accessToken, apiBaseUrl } from '@/app/ctConfig';
-import type { CtCollection, CtEntry, CtImageLink, CtLink } from '@/app/ctTypes';
-import { CtImageIncludes } from '@/app/ctTypes';
-
-// About page types
-type CtAuthorLink = CtEntry<
-  'link',
-  {
-    label: string;
-    url: string;
-  }
->;
-
-type CtAuthor = CtEntry<
-  'author',
-  {
-    name: string;
-    bio: string;
-    profileImage: CtImageLink;
-    links: CtLink<'Entry'>[];
-  }
->;
-
-type CtAuthorCollection = CtCollection<
-  'author',
-  CtAuthor['fields'],
-  CtAuthor
-> & {
-  includes: CtImageIncludes & {
-    Entry: CtAuthorLink[];
-  };
-};
 
 export async function getAuthorInfo(): Promise<PersonalInfo> {
   const res = await fetch(`${apiBaseUrl}/entries?content_type=author`, {
