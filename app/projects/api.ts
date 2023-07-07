@@ -1,6 +1,11 @@
 import 'server-only';
 
-import { accessToken, apiBaseUrl } from '@/app/ctConfig';
+import {
+  accessToken,
+  apiBaseUrl,
+  apiDraftUrl,
+  previewToken,
+} from '@/app/ctConfig';
 import type {
   CtCollection,
   CtEntry,
@@ -34,10 +39,19 @@ type CtTag = CtIdentifiableResource<'Tag'> & {
 };
 
 // API functions
-async function getTagName(id: string): Promise<string> {
-  const res = await fetch(`${apiBaseUrl}/tags/${id}`, {
+function getApiParams(draftMode: boolean) {
+  return {
+    baseUrl: draftMode ? apiDraftUrl : apiBaseUrl,
+    token: draftMode ? previewToken : accessToken,
+  };
+}
+
+async function getTagName(id: string, draftMode: boolean): Promise<string> {
+  const { baseUrl, token } = getApiParams(draftMode);
+
+  const res = await fetch(`${baseUrl}/tags/${id}`, {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
     },
     next: {
       tags: [`tag-${id}`],
@@ -52,7 +66,10 @@ async function getTagName(id: string): Promise<string> {
   return data.name;
 }
 
-async function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
+async function mapCtCollectionToProjectList(
+  ctCollection: CtProjectCollection,
+  draftMode: boolean
+) {
   return Promise.all(
     ctCollection.items.map<Promise<Project>>(async (ctProject) => {
       const images = ctProject.fields.images.map<ImageData>((imageLink) => {
@@ -74,7 +91,9 @@ async function mapCtCollectionToProjectList(ctCollection: CtProjectCollection) {
         title: ctProject.fields.name,
         description: ctProject.fields.description,
         tags: await Promise.all(
-          ctProject.metadata.tags.map((tag) => getTagName(tag.sys.id))
+          ctProject.metadata.tags.map((tag) =>
+            getTagName(tag.sys.id, draftMode)
+          )
         ),
         images,
         sourceLink: ctProject.fields.sourceLink ?? undefined,
@@ -102,15 +121,20 @@ export async function getProjects(): Promise<Project[]> {
 
   const data = (await res.json()) as CtProjectCollection;
 
-  return await mapCtCollectionToProjectList(data);
+  return await mapCtCollectionToProjectList(data, false);
 }
 
-export async function getProject(id: string): Promise<Project> {
+export async function getProject(
+  id: string,
+  draftMode = false
+): Promise<Project> {
+  const { baseUrl, token } = getApiParams(draftMode);
+
   const res = await fetch(
-    `${apiBaseUrl}/entries?content_type=project&sys.id=${id}`,
+    `${baseUrl}/entries?content_type=project&sys.id=${id}`,
     {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
       next: {
         tags: [`project-${id}`],
@@ -123,7 +147,7 @@ export async function getProject(id: string): Promise<Project> {
 
   const data = (await res.json()) as CtProjectCollection;
 
-  const projectResults = await mapCtCollectionToProjectList(data);
+  const projectResults = await mapCtCollectionToProjectList(data, draftMode);
 
   return projectResults[0];
 }
