@@ -67,3 +67,16 @@ export interface Project {
    */
   images: ImageData[];
 }
+
+/**
+ * Represents the preview data for a project.
+ */
+export type ProjectPreview = Pick<
+  Project,
+  'id' | 'title' | 'sourceLink' | 'liveLink'
+> & {
+  /**
+   * The image to display on the preview card.
+   */
+  previewImage: ImageData;
+};

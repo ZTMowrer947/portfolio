@@ -10,7 +10,7 @@ import {
   apiDraftUrl,
   previewToken,
 } from '@/app/(contentful)/env';
-import { ImageData, Project } from '@/app/projects/type';
+import { ImageData, ProjectPreview } from '@/app/projects/type';
 
 interface GetResourceOptions {
   slug: string;
@@ -84,6 +84,7 @@ async function getEntry<
   // Construct options for resource fetching
   options.params.set('content_type', options.contentType);
   const slug = ['/entries', options.params.toString()].join('?');
+
   const resOptions = {
     draftMode: options.draftMode,
     tags: options.tags,
@@ -107,19 +108,21 @@ async function getTagName(id: string, draftMode: boolean): Promise<string> {
 export async function projectMapper(collection: CtProjectCollection) {}
 
 // Entry fetchers
-export async function getProjects(): Promise<Project[]> {
+export async function getProjects(): Promise<ProjectPreview[]> {
   const options = {
     tags: ['projects'],
     contentType: 'project',
     params: new URLSearchParams({
       order: 'sys.createdAt',
+      select:
+        'sys.id,sys.createdAt,fields.name,fields.images,fields.sourceLink,fields.liveLink',
     }),
     draftMode: false,
   };
 
   return getEntry(options, (collection: CtProjectCollection) => {
     return Promise.all(
-      collection.items.map<Promise<Project>>(async (ctProject) => {
+      collection.items.map<Promise<ProjectPreview>>(async (ctProject) => {
         const images = ctProject.fields.images.map<ImageData>(
           (imageLink, index) => {
             const ctImage = collection.includes.Asset.find(
@@ -141,13 +144,7 @@ export async function getProjects(): Promise<Project[]> {
         return {
           id: ctProject.sys.id,
           title: ctProject.fields.name,
-          description: ctProject.fields.description,
-          tags: await Promise.all(
-            ctProject.metadata.tags.map((tag) =>
-              getTagName(tag.sys.id, options.draftMode)
-            )
-          ),
-          images,
+          previewImage: images[0],
           sourceLink: ctProject.fields.sourceLink ?? undefined,
           liveLink: ctProject.fields.liveLink ?? undefined,
         };

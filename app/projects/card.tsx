@@ -1,17 +1,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Project } from '@/app/projects/type';
+import type { ProjectPreview } from '@/app/projects/type';
 
 export interface ProjectCardProps {
   /**
    * The project to display on the card.
    */
-  project: Project;
+  project: ProjectPreview;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
-  const firstImage = project.images[0];
+  const firstImage = project.previewImage;
 
   const hasSourceLink = !!project.sourceLink;
   const hasLiveLink = !!project.liveLink;

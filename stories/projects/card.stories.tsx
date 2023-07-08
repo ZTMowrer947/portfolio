@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Chance from 'chance';
 
 import ProjectCard from '@/app/projects/card';
-import { generateProject } from '@/stories/projects/utils';
+import { generateProjectPreview } from '@/stories/projects/utils';
 
 // If you get the seed string's reference, you are cultured!
 // In all seriousness, provides a static seed to ensure repeatable results
@@ -28,8 +28,7 @@ type Story = StoryObj<typeof ProjectCard>;
 
 export const Standard: Story = {
   args: {
-    project: generateProject(chance, {
-      numImages: 1,
+    project: generateProjectPreview(chance, {
       withLiveLink: false,
       withSourceLink: false,
     }),
@@ -38,8 +37,7 @@ export const Standard: Story = {
 
 export const WithSourceLink: Story = {
   args: {
-    project: generateProject(chance, {
-      numImages: 1,
+    project: generateProjectPreview(chance, {
       withLiveLink: false,
       withSourceLink: true,
     }),
@@ -48,8 +46,7 @@ export const WithSourceLink: Story = {
 
 export const WithLiveLink: Story = {
   args: {
-    project: generateProject(chance, {
-      numImages: 1,
+    project: generateProjectPreview(chance, {
       withLiveLink: true,
       withSourceLink: false,
     }),
@@ -58,8 +55,7 @@ export const WithLiveLink: Story = {
 
 export const WithLiveAndSourceLinks: Story = {
   args: {
-    project: generateProject(chance, {
-      numImages: 1,
+    project: generateProjectPreview(chance, {
       withLiveLink: true,
       withSourceLink: true,
     }),

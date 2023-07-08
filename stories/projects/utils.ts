@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import type { ImageData, Project } from '@/app/projects/type';
+import type { ImageData, Project, ProjectPreview } from '@/app/projects/type';
 
 // Option types
 interface GenerateProjectOptions {
@@ -8,6 +8,8 @@ interface GenerateProjectOptions {
   withSourceLink: boolean | 'random';
   numImages: number;
 }
+
+type GenerateProjectPreviewOptions = Omit<GenerateProjectOptions, 'numImages'>;
 
 interface GenerateProjectListNumberOptions {
   standard: number;
@@ -18,13 +20,16 @@ interface GenerateProjectListNumberOptions {
 
 interface GenerateProjectListOptions {
   num: number | GenerateProjectListNumberOptions;
-  imagesPerProject: number;
 }
 
 // Default options
-const generateProjectDefaultOptions: GenerateProjectOptions = {
+const generateProjectPreviewDefaultOptions: GenerateProjectPreviewOptions = {
   withLiveLink: 'random',
   withSourceLink: 'random',
+};
+
+const generateProjectDefaultOptions: GenerateProjectOptions = {
+  ...generateProjectPreviewDefaultOptions,
   numImages: 3,
 };
 
@@ -35,7 +40,6 @@ const generateProjectListDefaultOptions: GenerateProjectListOptions = {
     withSource: 2,
     withLiveAndSource: 3,
   },
-  imagesPerProject: 3,
 };
 
 // Utility functions
@@ -52,6 +56,28 @@ function generateProjectImage(chance: Chance.Chance): ImageData {
     src: `https://placehold.it/1280x720/${backgroundColor}/${textColor}`,
     width: 1280,
     height: 720,
+  };
+}
+
+export function generateProjectPreview(
+  chance: Chance.Chance,
+  options = generateProjectPreviewDefaultOptions
+): ProjectPreview {
+  const hasLiveLink =
+    typeof options.withLiveLink === 'boolean'
+      ? options.withLiveLink
+      : chance.bool();
+  const hasSourceLink =
+    typeof options.withSourceLink === 'boolean'
+      ? options.withSourceLink
+      : chance.bool();
+
+  return {
+    id: chance.guid(),
+    title: chance.sentence({ words: 3 }).slice(0, -1),
+    previewImage: generateProjectImage(chance),
+    sourceLink: hasSourceLink ? chance.url({ protocol: 'https' }) : undefined,
+    liveLink: hasLiveLink ? chance.url({ protocol: 'https' }) : undefined,
   };
 }
 
@@ -84,26 +110,26 @@ export function generateProjectList(
   options = generateProjectListDefaultOptions
 ) {
   if (typeof options.num === 'number') {
-    return chance.n(generateProject, options.num, chance);
+    return chance.n(generateProjectPreview, options.num, chance);
   } else {
     // Partially applying project generator for chance.n
-    const boundGenerateProject = (options?: GenerateProjectOptions) =>
-      generateProject(chance, options);
+    const boundGenerateProjectPreview = (
+      options?: GenerateProjectPreviewOptions
+    ) => generateProjectPreview(chance, options);
 
-    const baseProjectOptions: GenerateProjectOptions = {
+    const baseProjectOptions: GenerateProjectPreviewOptions = {
       ...generateProjectDefaultOptions,
       withLiveLink: false,
       withSourceLink: false,
-      numImages: options.imagesPerProject,
     };
 
     const standardProjects = chance.n(
-      boundGenerateProject,
+      boundGenerateProjectPreview,
       options.num.standard,
       baseProjectOptions
     );
     const projectsWithSourceLink = chance.n(
-      boundGenerateProject,
+      boundGenerateProjectPreview,
       options.num.withSource,
       {
         ...baseProjectOptions,
@@ -112,7 +138,7 @@ export function generateProjectList(
     );
 
     const projectsWithLiveLink = chance.n(
-      boundGenerateProject,
+      boundGenerateProjectPreview,
       options.num.withLive,
       {
         ...baseProjectOptions,
@@ -121,7 +147,7 @@ export function generateProjectList(
     );
 
     const projectsWithBothLinks = chance.n(
-      boundGenerateProject,
+      boundGenerateProjectPreview,
       options.num.withLiveAndSource,
       {
         ...baseProjectOptions,

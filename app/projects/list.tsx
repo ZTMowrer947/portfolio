@@ -1,11 +1,11 @@
 import ProjectCard from '@/app/projects/card';
-import type { Project } from '@/app/projects/type';
+import type { ProjectPreview } from '@/app/projects/type';
 
 interface ProjectListProps {
   /**
    * The array of projects to display.
    */
-  projects: Project[];
+  projects: ProjectPreview[];
 }
 
 export default function ProjectList({ projects }: ProjectListProps) {

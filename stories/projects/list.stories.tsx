@@ -25,6 +25,6 @@ export const TenProjects: Story = {
 
 export const FiftyProjects: Story = {
   args: {
-    projects: generateProjectList(chance, { num: 50, imagesPerProject: 5 }),
+    projects: generateProjectList(chance, { num: 50 }),
   },
 };
