@@ -158,7 +158,7 @@ export async function getProjects(): Promise<ProjectPreview[]> {
 export async function getProject(
   id: string,
   draftMode = false
-): Promise<Project> {
+): Promise<Project | null> {
   const options = {
     tags: [`project-${id}`],
     contentType: 'project',
@@ -169,6 +169,8 @@ export async function getProject(
   };
 
   return getEntry(options, async (collection: CtProjectCollection) => {
+    if (collection.items.length === 0) return null;
+
     // Get first and only item in collection
     const ctProject = collection.items[0];
 
