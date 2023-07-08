@@ -2,7 +2,7 @@
 import { draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { getProject } from '@/app/projects/api';
+import { getProject } from '@/app/(contentful)/api';
 
 export async function GET(request: Request) {
   // Parse query string parameters

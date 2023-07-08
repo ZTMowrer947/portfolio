@@ -1,7 +1,7 @@
 import { draftMode } from 'next/headers';
 
+import { getProject } from '@/app/(contentful)/api';
 import ProjectInfo from '@/app/projects/[id]/info';
-import { getProject } from '@/app/projects/api';
 
 interface ProjectDetailProps {
   params: {

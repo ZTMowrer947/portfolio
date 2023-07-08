@@ -11,7 +11,7 @@ import {
   apiDraftUrl,
   previewToken,
 } from '@/app/(contentful)/env';
-import type { ImageData, ProjectPreview } from '@/app/projects/type';
+import type { ImageData, Project, ProjectPreview } from '@/app/projects/type';
 
 interface GetResourceOptions {
   slug: string;
@@ -95,16 +95,6 @@ async function getEntry<
   return getResource(resOptions, dataMapper);
 }
 
-async function getTagName(id: string, draftMode: boolean): Promise<string> {
-  const options = {
-    slug: `/tags/${id}`,
-    draftMode,
-    tags: [`tags`, `tag-${id}`],
-  };
-
-  return getResource(options, (data: CtTag) => data.name);
-}
-
 // Mappers
 function imageMapper(ctImage: CtImage, fallbackAltText: string): ImageData {
   return {
@@ -117,6 +107,16 @@ function imageMapper(ctImage: CtImage, fallbackAltText: string): ImageData {
 }
 
 // Entry fetchers
+async function getTagName(id: string, draftMode: boolean): Promise<string> {
+  const options = {
+    slug: `/tags/${id}`,
+    draftMode,
+    tags: [`tag-${id}`],
+  };
+
+  return getResource(options, (data: CtTag) => data.name);
+}
+
 export async function getProjects(): Promise<ProjectPreview[]> {
   const options = {
     tags: ['projects'],
@@ -145,5 +145,51 @@ export async function getProjects(): Promise<ProjectPreview[]> {
         liveLink: ctProject.fields.liveLink ?? undefined,
       };
     });
+  });
+}
+
+export async function getProject(
+  id: string,
+  draftMode = false
+): Promise<Project> {
+  const options = {
+    tags: [`project-${id}`],
+    contentType: 'project',
+    params: new URLSearchParams({
+      'sys.id': id,
+    }),
+    draftMode,
+  };
+
+  return getEntry(options, async (collection: CtProjectCollection) => {
+    // Get first and only item in collection
+    const ctProject = collection.items[0];
+
+    // Map image data and retrieve tag data
+    const images = ctProject.fields.images.map((imageLink, index) => {
+      const ctImage = collection.includes.Asset.find(
+        (asset) => asset.sys.id === imageLink.sys.id
+      )!;
+      const imageNum = index + 1;
+      const fallbackAltText = `${ctProject.fields.name} Image #${imageNum}`;
+
+      return imageMapper(ctImage, fallbackAltText);
+    });
+
+    const tags = await Promise.all(
+      ctProject.metadata.tags.map((tag) =>
+        getTagName(tag.sys.id, options.draftMode)
+      )
+    );
+
+    return {
+      id: ctProject.sys.id,
+      title: ctProject.fields.name,
+      description: ctProject.fields.description,
+      images,
+      tags,
+      sourceLink: ctProject.fields.sourceLink ?? undefined,
+      liveLink: ctProject.fields.liveLink ?? undefined,
+    };
   });
 }
