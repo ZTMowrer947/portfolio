@@ -1,4 +1,4 @@
-import { getProjects } from '@/app/projects/api';
+import { getProjects } from '@/app/(contentful)/api';
 import ProjectList from '@/app/projects/list';
 
 export default async function Projects() {

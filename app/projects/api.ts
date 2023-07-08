@@ -74,27 +74,6 @@ async function mapCtCollectionToProjectList(
   );
 }
 
-export async function getProjects(): Promise<Project[]> {
-  const res = await fetch(
-    `${apiBaseUrl}/entries?content_type=project&order=sys.createdAt`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      next: {
-        tags: ['projects'],
-      },
-      cache: process.env.NODE_ENV === 'production' ? 'default' : 'no-cache',
-    }
-  );
-
-  if (!res.ok) throw new Error('uh oh');
-
-  const data = (await res.json()) as CtProjectCollection;
-
-  return await mapCtCollectionToProjectList(data, false);
-}
-
 export async function getProject(
   id: string,
   draftMode = false
