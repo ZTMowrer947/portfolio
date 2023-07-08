@@ -1,16 +1,17 @@
 import type {
   CtCollection,
   CtEntry,
+  CtImage,
   CtResource,
 } from '@/app/(contentful)/baseTypes';
-import { CtProjectCollection, CtTag } from '@/app/(contentful)/entryTypes';
+import type { CtProjectCollection, CtTag } from '@/app/(contentful)/entryTypes';
 import {
   accessToken,
   apiBaseUrl,
   apiDraftUrl,
   previewToken,
 } from '@/app/(contentful)/env';
-import { ImageData, ProjectPreview } from '@/app/projects/type';
+import type { ImageData, ProjectPreview } from '@/app/projects/type';
 
 interface GetResourceOptions {
   slug: string;
@@ -105,7 +106,15 @@ async function getTagName(id: string, draftMode: boolean): Promise<string> {
 }
 
 // Mappers
-export async function projectMapper(collection: CtProjectCollection) {}
+function imageMapper(ctImage: CtImage, fallbackAltText: string): ImageData {
+  return {
+    id: ctImage.sys.id,
+    altText: fallbackAltText,
+    src: `https:${ctImage.fields.file.url}`,
+    width: ctImage.fields.file.details.image.width,
+    height: ctImage.fields.file.details.image.height,
+  };
+}
 
 // Entry fetchers
 export async function getProjects(): Promise<ProjectPreview[]> {
@@ -121,34 +130,20 @@ export async function getProjects(): Promise<ProjectPreview[]> {
   };
 
   return getEntry(options, (collection: CtProjectCollection) => {
-    return Promise.all(
-      collection.items.map<Promise<ProjectPreview>>(async (ctProject) => {
-        const images = ctProject.fields.images.map<ImageData>(
-          (imageLink, index) => {
-            const ctImage = collection.includes.Asset.find(
-              (asset) => asset.sys.id === imageLink.sys.id
-            )!;
+    return collection.items.map<ProjectPreview>((ctProject) => {
+      const imageLink = ctProject.fields.images[0];
+      const fallbackAlt = `Preview image for ${ctProject.fields.name}`;
+      const ctImage = collection.includes.Asset.find(
+        (asset) => asset.sys.id === imageLink.sys.id
+      )!;
 
-            return {
-              id: ctImage.sys.id,
-              altText: `Project Image #${index + 1} for ${
-                ctProject.fields.name
-              }`,
-              src: `https:${ctImage.fields.file.url}`,
-              width: ctImage.fields.file.details.image.width,
-              height: ctImage.fields.file.details.image.height,
-            };
-          }
-        );
-
-        return {
-          id: ctProject.sys.id,
-          title: ctProject.fields.name,
-          previewImage: images[0],
-          sourceLink: ctProject.fields.sourceLink ?? undefined,
-          liveLink: ctProject.fields.liveLink ?? undefined,
-        };
-      })
-    );
+      return {
+        id: ctProject.sys.id,
+        title: ctProject.fields.name,
+        previewImage: imageMapper(ctImage, fallbackAlt),
+        sourceLink: ctProject.fields.sourceLink ?? undefined,
+        liveLink: ctProject.fields.liveLink ?? undefined,
+      };
+    });
   });
 }
