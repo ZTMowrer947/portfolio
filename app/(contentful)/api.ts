@@ -1,16 +1,23 @@
+import 'server-only';
+
 import type {
   CtCollection,
   CtEntry,
   CtImage,
   CtResource,
 } from '@/app/(contentful)/baseTypes';
-import type { CtProjectCollection, CtTag } from '@/app/(contentful)/entryTypes';
+import type {
+  CtAuthorCollection,
+  CtProjectCollection,
+  CtTag,
+} from '@/app/(contentful)/entryTypes';
 import {
   accessToken,
   apiBaseUrl,
   apiDraftUrl,
   previewToken,
 } from '@/app/(contentful)/env';
+import type { PersonalInfo } from '@/app/about/info';
 import type { ImageData, Project, ProjectPreview } from '@/app/projects/type';
 
 interface GetResourceOptions {
@@ -190,6 +197,45 @@ export async function getProject(
       tags,
       sourceLink: ctProject.fields.sourceLink ?? undefined,
       liveLink: ctProject.fields.liveLink ?? undefined,
+    };
+  });
+}
+
+export async function getAuthorInfo(): Promise<PersonalInfo> {
+  const options = {
+    tags: ['author'],
+    contentType: 'author',
+    draftMode: false,
+    params: new URLSearchParams(''),
+  };
+
+  return getEntry(options, (collection: CtAuthorCollection) => {
+    const author = collection.items[0];
+
+    const profileImageAsset = collection.includes.Asset.find(
+      (asset) => asset.sys.id === author.fields.profileImage.sys.id
+    )!;
+
+    return {
+      name: author.fields.name,
+      bio: author.fields.bio,
+      profileImageUrl: {
+        id: profileImageAsset.sys.id,
+        altText: `Portrait of ${author.fields.name}`,
+        src: `https:${profileImageAsset.fields.file.url}`,
+        height: profileImageAsset.fields.file.details.image.height,
+        width: profileImageAsset.fields.file.details.image.width,
+      },
+      externalLinks: author.fields.links.map((entryLink) => {
+        const link = collection.includes.Entry.find(
+          (entry) => entry.sys.id === entryLink.sys.id
+        )!;
+
+        return {
+          label: link.fields.label,
+          url: link.fields.url,
+        };
+      }),
     };
   });
 }

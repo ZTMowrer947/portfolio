@@ -1,4 +1,4 @@
-import { getAuthorInfo } from '@/app/about/api';
+import { getAuthorInfo } from '@/app/(contentful)/api';
 import InfoDisplay from '@/app/about/info';
 
 export default async function About() {
