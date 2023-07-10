@@ -1,9 +1,12 @@
 import { draftMode } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 import { getDraftEntityBySlug } from '@/app/api/draft/api';
 
 export async function GET(request: Request) {
+  // Mask route on production deployments
+  if (process.env.NODE_ENV === 'production') notFound();
+
   // Parse query string parameters
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get('secret');
