@@ -203,11 +203,11 @@ export async function getProject(
   });
 }
 
-export async function getAuthorInfo(): Promise<PersonalInfo> {
+export async function getAuthorInfo(draftMode = false): Promise<PersonalInfo> {
   const options = {
     tags: ['author'],
     contentType: 'author',
-    draftMode: false,
+    draftMode,
     params: new URLSearchParams(''),
   };
 

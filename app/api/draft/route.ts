@@ -1,8 +1,7 @@
-// route handler with secret and slug
 import { draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { getProject } from '@/app/(contentful)/api';
+import { getDraftEntityBySlug } from '@/app/api/draft/api';
 
 export async function GET(request: Request) {
   // Parse query string parameters
@@ -15,27 +14,17 @@ export async function GET(request: Request) {
     return new Response('Invalid token', { status: 401 });
   }
 
-  // Try to extract a project ID from the slug
-  const projectSlugRegex = /^\/projects\/(?<id>\w+)$/;
+  // Attempt to fetch an entity from the slug
+  const result = await getDraftEntityBySlug(slug);
 
-  const matchResult = projectSlugRegex.exec(slug);
-
-  // If the slug doesn't exist prevent draft mode from being enabled
-  if (!matchResult?.groups?.id) {
+  // If this fails, don't enable draft mode
+  if (!result) {
     return new Response('Invalid slug', { status: 401 });
   }
 
-  // Fetch the project data
-  const project = await getProject(matchResult.groups.id, true);
-
-  if (!project) {
-    return new Response('Invalid slug', { status: 401 });
-  }
-
-  // Enable Draft Mode by setting the cookie
+  // Otherwise, enable draft mode by setting the cookie
   draftMode().enable();
 
-  // Redirect to the path from the fetched post
-  // We don't redirect to searchParams.slug as that might lead to open redirect vulnerabilities
-  redirect(`/projects/${project.id}`);
+  // Redirect to the correct path to preview the entity in draft mode
+  redirect(result.redirectSlug);
 }
