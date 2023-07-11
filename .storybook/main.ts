@@ -19,6 +19,25 @@ const config: StorybookConfig = {
   },
   async webpackFinal(config) {
     config.resolve.alias['@'] = resolve(__dirname, '..');
+
+    config.module.rules = config.module.rules.map((rule) => {
+      if (rule === '...' || !rule.test) return rule;
+
+      if (/svg/.test(rule.test.toString())) {
+        return {
+          ...rule,
+          exclude: /\.svg$/i,
+        };
+      }
+
+      return rule;
+    });
+
+    config.module.rules.unshift({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: ['@svgr/webpack'],
+    });
     return config;
   },
 };
