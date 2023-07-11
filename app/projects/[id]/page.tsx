@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import { getProject } from '@/app/(contentful)/api';
+import { getProject, getProjects } from '@/app/(contentful)/api';
 import ProjectInfo from '@/app/projects/[id]/info';
 
 interface ProjectDetailProps {
@@ -18,6 +18,14 @@ export default async function ProjectDetail({ params }: ProjectDetailProps) {
   if (!project) notFound();
 
   return <ProjectInfo project={project} />;
+}
+
+export async function generateStaticParams() {
+  const projects = await getProjects();
+
+  return projects.map((project) => ({
+    id: project.id,
+  }));
 }
 
 export async function generateMetadata({
