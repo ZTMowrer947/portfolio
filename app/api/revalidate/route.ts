@@ -22,8 +22,10 @@ export async function POST(request: NextRequest) {
       }
     );
 
-  if (type === 'project') revalidateTag(`project-${id}`);
-  else if (type === 'author') revalidateTag(type);
+  if (type === 'project') {
+    revalidateTag(`project-${id}`);
+    revalidateTag('projects');
+  } else if (type === 'author') revalidateTag(type);
 
   return NextResponse.json({
     revalidated: ['project', 'author'].includes(type),
