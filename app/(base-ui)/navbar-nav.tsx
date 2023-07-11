@@ -11,8 +11,6 @@ export default function NavbarNav() {
 
   const handleToggle = () => setCollapsed((prevCollapsed) => !prevCollapsed);
 
-  console.log(Navburger);
-
   return (
     <>
       <button
