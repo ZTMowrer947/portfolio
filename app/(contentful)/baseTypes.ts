@@ -37,7 +37,9 @@ export type CtEntry<ContentType extends string, Fields> = CtItem<
   };
   sys: CtItem<'Entry', Fields> & {
     contentType: CtLink<'ContentType'> & {
-      id: ContentType;
+      sys: {
+        id: ContentType;
+      };
     };
   };
 };
@@ -54,23 +56,25 @@ export interface CtCollection<
 }
 
 // Portfolio-specific types
-export type CtImageLink = CtLink<'Asset'>;
+export type CtAssetLink = CtLink<'Asset'>;
 
-export type CtImage = CtItem<
+export type CtAsset<Details = undefined> = CtItem<
   'Asset',
   {
     file: {
       url: string;
       contentType: string;
-      details: {
-        image: {
-          width: number;
-          height: number;
-        };
-      };
+      details: Details;
     };
   }
 >;
+
+export type CtImage = CtAsset<{
+  image: {
+    width: number;
+    height: number;
+  };
+}>;
 
 export interface CtImageIncludes {
   Asset: CtImage[];

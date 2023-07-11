@@ -7,7 +7,9 @@ import type {
   CtResource,
 } from '@/app/(contentful)/baseTypes';
 import type {
+  CtAuthorAsset,
   CtAuthorCollection,
+  CtAuthorLink,
   CtProjectCollection,
   CtTag,
 } from '@/app/(contentful)/entryTypes';
@@ -233,9 +235,21 @@ export async function getAuthorInfo(draftMode = false): Promise<PersonalInfo> {
           (entry) => entry.sys.id === entryLink.sys.id
         )!;
 
+        if (link.sys.contentType.sys.id === 'link') {
+          return {
+            label: link.fields.label,
+            url: (link as CtAuthorLink).fields.url,
+          };
+        }
+
+        const asset = collection.includes.Asset.find(
+          (asset) =>
+            (link as CtAuthorAsset).fields.asset.sys.id === asset.sys.id
+        )!;
+
         return {
           label: link.fields.label,
-          url: link.fields.url,
+          url: asset.fields.file.url,
         };
       }),
     };

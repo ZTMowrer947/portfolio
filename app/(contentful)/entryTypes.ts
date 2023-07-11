@@ -1,10 +1,10 @@
 import 'server-only';
 
 import type {
+  CtAssetLink,
   CtCollection,
   CtEntry,
   CtImageIncludes,
-  CtImageLink,
   CtLink,
 } from '@/app/(contentful)/baseTypes';
 import { CtIdentifiableResource } from '@/app/(contentful)/baseTypes';
@@ -15,7 +15,7 @@ export type CtProject = CtEntry<
   {
     name: string;
     description: string;
-    images: CtImageLink[];
+    images: CtAssetLink[];
     sourceLink: string | null;
     liveLink: string | null;
   }
@@ -42,12 +42,20 @@ export type CtAuthorLink = CtEntry<
   }
 >;
 
+export type CtAuthorAsset = CtEntry<
+  'authorAsset',
+  {
+    label: string;
+    asset: CtAssetLink;
+  }
+>;
+
 export type CtAuthor = CtEntry<
   'author',
   {
     name: string;
     bio: string;
-    profileImage: CtImageLink;
+    profileImage: CtAssetLink;
     links: CtLink<'Entry'>[];
   }
 >;
@@ -58,6 +66,6 @@ export type CtAuthorCollection = CtCollection<
   CtAuthor
 > & {
   includes: CtImageIncludes & {
-    Entry: CtAuthorLink[];
+    Entry: (CtAuthorLink | CtAuthorAsset)[];
   };
 };
