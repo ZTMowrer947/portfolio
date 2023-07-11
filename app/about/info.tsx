@@ -20,6 +20,10 @@ interface InfoDisplayProps {
 }
 
 export default function InfoDisplay({ info }: InfoDisplayProps) {
+  const profileImgSizes = `(min-width: 1280px) 33vw,
+  (min-width: 1024px) 50vw,
+  33vw`;
+
   return (
     <main className="grid grid-cols-3 xl:grid-cols-4 p-12">
       <header className="col-span-3 xl:col-span-4 mb-2 border-b border-slate-600 dark:border-white">
@@ -33,6 +37,7 @@ export default function InfoDisplay({ info }: InfoDisplayProps) {
           alt={info.profileImageUrl.altText}
           width={info.profileImageUrl.width}
           height={info.profileImageUrl.height}
+          sizes={profileImgSizes}
         />
         <h3 className="uppercase">{info.name}</h3>
       </aside>
@@ -44,7 +49,7 @@ export default function InfoDisplay({ info }: InfoDisplayProps) {
           <h3 className="uppercase border-b-2 border-slate-600 dark:border-white">
             Links
           </h3>
-          <ul className="grid grid-cols-2">
+          <ul className="grid md:grid-cols-2 xl:grid-cols-3">
             {info.externalLinks.map((link) => (
               <a
                 href={link.url}
